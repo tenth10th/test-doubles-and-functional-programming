@@ -12,7 +12,11 @@ def handle_rate_limit(api_response: Dict) -> bool:
 
     Return True if a rate limit occurred, otherwise False
     """
-    seconds_str = api_response.get('standoff_time', '')
+    try:
+        seconds_str = api_response['standoff_time']
+    except KeyError:
+        seconds_str = ''
+
     seconds_int = None
 
     try:
@@ -23,6 +27,8 @@ def handle_rate_limit(api_response: Dict) -> bool:
         seconds_int = DEFAULT_STANDOFF
 
     if seconds_int:
+        # for _ in range(6):
+            # print(time.sleep(seconds_int))
         time.sleep(seconds_int)
         return True
 
